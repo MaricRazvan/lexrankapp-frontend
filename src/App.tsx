@@ -17,7 +17,7 @@ export default function App() {
     setSummary('');
 
     try {
-      const response = await fetch('https://lexrankapp-backend.onrender.com', {
+      const response = await fetch('https://lexrankapp-backend.onrender.com/summarize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
