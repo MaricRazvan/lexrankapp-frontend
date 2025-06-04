@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { SummaryForm } from './components/SummaryForm';
+import { SummaryResult } from './components/SummaryResult';
 
-function App() {
+export default function App() {
+  const [summary, setSummary] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSummarySubmit = async (input: {
+    text: string;
+    compressionRate: number;
+    embeddingType: 'tfidf' | 'roberta';
+  }) => {
+    setLoading(true);
+    setError(null);
+    setSummary('');
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/summarize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: input.text,
+          compression_rate: input.compressionRate,
+          embedding_type: input.embeddingType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Server responded with an error.');
+      }
+
+      const jsonString = await response.json();  // This is a string, not an object
+      const data = JSON.parse(jsonString);
+      console.log(data);
+      console.log('Full data:', data);
+      console.log('data.summary:', data.summary);
+      setSummary(data.summary || 'No summary returned.');
+    } catch (e) {
+      setError('Failed to fetch summary from backend.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container mt-5">
+      <h1 className="mb-4">LexRank Summarizer</h1>
+      <SummaryForm onSubmit={handleSummarySubmit} />
+      <SummaryResult summary={summary} loading={loading} error={error || undefined} />
     </div>
   );
 }
-
-export default App;
