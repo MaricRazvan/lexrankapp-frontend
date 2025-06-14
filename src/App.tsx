@@ -10,12 +10,12 @@ export default function App() {
   const handleSummarySubmit = async (input: {
     text: string;
     compressionRate: number;
-    embeddingType: 'tfidf' | 'roberta';
+    embeddingType: 'tfidf' | 'bert';
   }) => {
     setLoading(true);
     setError(null);
     setSummary('');
-
+  
     try {
       const response = await fetch('https://lexrankapp-backend.onrender.com/summarize', {
         method: 'POST',

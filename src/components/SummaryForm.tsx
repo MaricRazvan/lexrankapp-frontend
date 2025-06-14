@@ -1,10 +1,9 @@
-// src/components/SummaryForm.tsx
 import React, { useState } from 'react';
 
 type SummaryInput = {
   text: string;
   compressionRate: number;
-  embeddingType: 'tfidf' | 'roberta';
+  embeddingType: 'tfidf' | 'bert';
 };
 
 type SummaryFormProps = {
@@ -14,7 +13,7 @@ type SummaryFormProps = {
 export function SummaryForm({ onSubmit }: SummaryFormProps) {
   const [text, setText] = useState('');
   const [compressionRate, setCompressionRate] = useState(0.3);
-  const [embeddingType, setEmbeddingType] = useState<'tfidf' | 'roberta'>('tfidf');
+  const [embeddingType, setEmbeddingType] = useState<'tfidf' | 'bert'>('tfidf');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,10 +56,10 @@ export function SummaryForm({ onSubmit }: SummaryFormProps) {
           id="embeddingSelect"
           className="form-select"
           value={embeddingType}
-          onChange={(e) => setEmbeddingType(e.target.value as 'tfidf' | 'roberta')}
+          onChange={(e) => setEmbeddingType(e.target.value as 'tfidf' | 'bert')}
         >
           <option value="tfidf">TF-IDF</option>
-          <option value="roberta">RoBERTa</option>
+          <option value="bert">Dumitrescu Ștefan's BERT model</option>
         </select>
       </div>
 
